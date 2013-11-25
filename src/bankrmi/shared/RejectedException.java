@@ -1,4 +1,6 @@
-package bankrmi.server;
+package bankrmi.shared;
+
+import bankrmi.server.*;
 
 final public class RejectedException extends Exception {
 	private static final long serialVersionUID = -314439670131687936L;

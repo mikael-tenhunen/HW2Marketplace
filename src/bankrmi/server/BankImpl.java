@@ -1,5 +1,8 @@
 package bankrmi.server;
 
+import bankrmi.shared.Bank;
+import bankrmi.shared.Account;
+import bankrmi.shared.RejectedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;

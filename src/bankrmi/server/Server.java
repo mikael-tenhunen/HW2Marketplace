@@ -1,5 +1,7 @@
 package bankrmi.server;
 
+import bankrmi.shared.Bank;
+
 public class Server {    
 	private static final String USAGE = "java bankrmi.Server <bank_rmi_url>";
 	private static final String BANK = "Nordea";

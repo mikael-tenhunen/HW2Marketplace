@@ -1,5 +1,7 @@
 package bankrmi.server;
 
+import bankrmi.shared.Account;
+import bankrmi.shared.RejectedException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 
@@ -29,7 +31,7 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
     }
     
     public synchronized void withdraw(float value) throws RemoteException, 
-                                                          RejectedException {
+            RejectedException {
         if (value < 0) {
             throw new RejectedException("Rejected: Account " + name + 
             		                    ": Illegal value: " + value);

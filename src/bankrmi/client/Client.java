@@ -1,5 +1,8 @@
 package bankrmi.client;
 
+import bankrmi.shared.Account;
+import bankrmi.shared.Bank;
+import bankrmi.shared.RejectedException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,5 +1,6 @@
-package bankrmi.client;
+package bankrmi.shared;
 
+import bankrmi.client.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Set;
