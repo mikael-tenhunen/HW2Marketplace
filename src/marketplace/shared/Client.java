@@ -8,4 +8,5 @@ public interface Client extends Remote {
     void buyProduct(Item product);
     void notifySale(Item product);
     
-}
+}    
+
