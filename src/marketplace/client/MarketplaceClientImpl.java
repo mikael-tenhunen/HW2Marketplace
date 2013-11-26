@@ -24,15 +24,18 @@ public class MarketplaceClientImpl extends Client implements MarketplaceClient{
 
     @Override
     public void registerAtMarketplace() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void unregisterAtMarketplace() {
     }
 
-    @Override
     public void notifyWishAvailable() throws RemoteException {
+    }
+
+    @Override
+    public void notifyWishAvailable(String itemName, float price) 
+            throws RemoteException {
     }
     
     

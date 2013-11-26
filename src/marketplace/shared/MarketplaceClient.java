@@ -10,5 +10,7 @@ public interface MarketplaceClient extends Remote {
     public void notifySale(Item product) throws RemoteException;
     public void registerAtMarketplace();
     public void unregisterAtMarketplace();
-    public void notifyWishAvailable() throws RemoteException;
+    public void notifyWishAvailable(String itemName, float price) 
+            throws RemoteException;
+    
 }
