@@ -6,6 +6,6 @@ public interface Item {
     public void setName(String name);
     public float getPrice();
     public void setPrice(float price);
-    public Client getSeller();
-    public void setSeller(Client seller);
+    public MarketplaceClient getSeller();
+    public void setSeller(MarketplaceClient seller);
 }
