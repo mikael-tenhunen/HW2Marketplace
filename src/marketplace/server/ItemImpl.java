@@ -2,14 +2,15 @@ package marketplace.server;
 
 import marketplace.shared.MarketplaceClient;
 import marketplace.shared.Item;
+import marketplace.shared.MarketplaceAccount;
 
 
 public class ItemImpl implements Item {
     private String name;
     private float price;
-    private MarketplaceClient seller;
+    private MarketplaceAccount seller;
     
-    public ItemImpl (String name, float price, MarketplaceClient seller) {
+    public ItemImpl (String name, float price, MarketplaceAccount seller) {
         this.name = name;
         this.price = price;
         this.seller = seller;
@@ -31,11 +32,11 @@ public class ItemImpl implements Item {
         this.price = price;
     }
 
-    public MarketplaceClient getSeller() {
+    public MarketplaceAccount getSeller() {
         return seller;
     }
 
-    public void setSeller(MarketplaceClient seller) {
+    public void setSeller(MarketplaceAccount seller) {
         this.seller = seller;
     }
 }
