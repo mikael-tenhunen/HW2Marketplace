@@ -12,6 +12,8 @@ import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace {
     Map<String, MarketplaceAccount> accounts;
+    Map<String, List<Float>> wishes;
+    List<Item> items;
     
     
     public MarketplaceImpl() throws RemoteException { 
@@ -38,7 +40,7 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
 
     @Override
     public boolean unregisterCustomer(String customerName) throws RemoteException {
-        return false;
+       return false;
     }
 
     @Override
