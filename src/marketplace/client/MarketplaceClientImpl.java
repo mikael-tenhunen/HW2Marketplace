@@ -8,6 +8,7 @@ import marketplace.shared.Item;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
 import marketplace.shared.MarketplaceClient;
+import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceClientImpl extends UnicastRemoteObject implements MarketplaceClient{
     
@@ -28,13 +29,13 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
         System.out.println("Client connected to Marketplace");        
     }
 
-    protected void offerProduct(String itemName, float price) {
+    protected void offerProduct(String  temName, float price) {
     }
 
     protected void buyProduct(String itemName) {
     }
 
-    protected void registerAtMarketplace(String name, String bankAccountName) {
+    protected void registerAtMarketplace(String name, String bankAccountName) throws RegisterCustomerException {
         try {
             this.marketplaceAccount = (MarketplaceAccount)
                     marketplace.registerCustomer(name, bankAccountName);
@@ -42,7 +43,11 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             System.out.println("Remote call to method registerCustomer at"
                     + "MarketPlace failed.");
             ex.printStackTrace();
+        } catch(RegisterCustomerException RCException)
+        {
+            System.out.println(RCException);
         }
+       
     }
 
     protected void unregisterAtMarketplace() {

@@ -10,6 +10,7 @@ import marketplace.shared.Item;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
 import marketplace.shared.MarketplaceClient;
+import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceAccountImpl extends UnicastRemoteObject implements MarketplaceAccount{
     static final String DEFAULT_BANK = "Nordea";
@@ -19,7 +20,7 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
     private Marketplace marketplace;
     
     public MarketplaceAccountImpl(String customerName, String bankAccountName, 
-            Marketplace marketplace) throws RemoteException {
+            Marketplace marketplace) throws RemoteException, RegisterCustomerException {
         this.customerName = customerName;
         //We do this so we can do callbacks to client
         try {
@@ -28,24 +29,28 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
                 System.out.println("Failed creating a serverside representation"
                         + " of MarketplaceClient in constructor of account: " 
                         + e.getMessage());
+                throw new RegisterCustomerException("Failed creating a serverside representation"
+                        + " of MarketplaceClient in constructor of account: " + e.getMessage()); 
         }    
         //Make RMI to bank account possible
         try {
             Bank bank = (Bank) Naming.lookup(DEFAULT_BANK);
-            this.bankAccount = bank.getAccount(bankAccountName);
+            bankAccount = bank.getAccount(bankAccountName);
             System.out.println("Bank: " + bank);
-            System.out.println("Bank Account: " + this.bankAccount);
+            System.out.println("Bank Account: " + bankAccount);
         } catch (Exception e) {
             System.out.println("Failed creating a serverside representation"
                     + "of bank account in constructor of marketplace account: " 
                     + e.getMessage());
+            throw new RegisterCustomerException("Failed creating a serverside representation"
+                    + " of bank account in constructor of marketplace account: " + e.getMessage()); 
         }   
 
         this.marketplace = marketplace;
         System.out.println("MarketplaceAccount succesfully created");
         try {
             //TEST
-            this.bankAccount.deposit(1);
+            deposit(1);
         } catch (RejectedException ex) {
             System.out.println("Deposit rejected");
         }
@@ -55,12 +60,12 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
 
     @Override
     public void deposit(float value) throws RemoteException, RejectedException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bankAccount.deposit(value);
     }
 
     @Override
     public void withdraw(float value) throws RemoteException, RejectedException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bankAccount.withdraw(value);
     }
 
     @Override

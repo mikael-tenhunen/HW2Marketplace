@@ -8,6 +8,7 @@ import java.util.Map;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
 import marketplace.shared.Item;
+import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace {
     Map<String, MarketplaceAccount> accounts;
@@ -19,12 +20,20 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
 
     @Override
     public MarketplaceAccount registerCustomer(String customerName, 
-            String bankAccountName) throws RemoteException {
+            String bankAccountName) throws RemoteException, RegisterCustomerException {
+        try
+        {
         MarketplaceAccount account = (MarketplaceAccount) 
                 new MarketplaceAccountImpl(customerName, bankAccountName, 
             this);
         accounts.put(customerName, account);
         return account;
+        }
+        catch(Exception e)
+        {
+            throw new RegisterCustomerException("Something went wrong with your"
+                    +" registration. please try again");
+        }
     }
 
     @Override
