@@ -44,6 +44,7 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
 
     @Override
     public boolean unregisterCustomer(String customerName) throws RemoteException {
+        return false;
     }
 
     @Override
