@@ -228,6 +228,8 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
                     String productName = arg1;
                     float price = Float.valueOf(arg2);
                     buyProduct(productName, price);
+                    System.out.println("Purchase successful. $" + price 
+                                        + " has been withdrawn from your account.");
                 } catch (Exception ne) {
                     System.out.println("Problem with second argument: should be"
                             + "floating point number");
