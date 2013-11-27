@@ -1,19 +1,19 @@
 package marketplace.server;
 
-import marketplace.shared.MarketplaceClient;
+import java.io.Serializable;
 import marketplace.shared.Item;
 import marketplace.shared.MarketplaceAccount;
 
 
-public class ItemImpl implements Item {
+public class ItemImpl implements Item, Serializable {
     private String name;
     private float price;
-    private MarketplaceAccount seller;
+    private String sellerName;
     
-    public ItemImpl (String name, float price, MarketplaceAccount seller) {
+    public ItemImpl (String name, float price, String sellerName) {
         this.name = name;
         this.price = price;
-        this.seller = seller;
+        this.sellerName = sellerName;
     }
 
     public String getName() {
@@ -32,11 +32,43 @@ public class ItemImpl implements Item {
         this.price = price;
     }
 
-    public MarketplaceAccount getSeller() {
-        return seller;
+    public String getSellerName() {
+        return sellerName;
     }
 
-    public void setSeller(MarketplaceAccount seller) {
-        this.seller = seller;
+    public void setSellerName(String seller) {
+        this.sellerName = seller;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        try {
+            Item otherItem = (Item) o;
+            if (name.equals(otherItem.getName()) && 
+                    price == otherItem.getPrice()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch(ClassCastException ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int result = 0;
+        try {
+            Item otherItem = (Item) o;
+            result += 1000000000 * this.getName().
+                    compareToIgnoreCase(otherItem.getName());
+            result += this.getPrice() - otherItem.getPrice();
+        } catch(ClassCastException ex) {
+        }
+        
+
+        return result;
+        
     }
 }

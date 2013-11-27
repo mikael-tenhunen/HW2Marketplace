@@ -7,7 +7,10 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import marketplace.shared.Item;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
@@ -153,7 +156,8 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             case list:
                 try {
                     for (Item item : marketplace.listItems()) {
-                        System.out.println(item);
+                        System.out.println(item.getName() + ", " 
+                                + item.getPrice());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -261,9 +265,33 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
     }    
     
     protected void offerProduct(String itemName, float price) {
+        try {
+            marketplaceAccount.addProduct(itemName, price);
+        } catch (RemoteException ex) {
+            System.out.println("Problem creating sale");
+        }
     }
 
     protected void buyProduct(String itemName, float price) {
+        try {
+            Item product = null;
+            List<Item> items = marketplace.listItems();
+            for (Item item : items) {
+                if (item.getName().equals(itemName)
+                    && item.getPrice() == price) {
+                    product = item;
+                }
+            }
+            if (product != null) {
+                marketplaceAccount.buyProduct(product);
+            }
+            else {
+                System.out.println("No such item available");
+            }
+            
+        } catch (RemoteException ex) {
+            System.out.println("Problem creating sale");
+        }
     }
     
     protected void makeWish(String itemName, float maxPrixe) {
@@ -293,7 +321,9 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
     }
 
     @Override
-    public void notifySale(Item product) throws RemoteException {
+    public void notifySale(String productName, float price) throws RemoteException {
+        System.out.println("A buyer has been found for your " + productName + ". " 
+                            + price +" has been deposited to your account.");
     }
 
     @Override

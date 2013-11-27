@@ -1,10 +1,7 @@
 
 package marketplace.server;
 
-import java.util.Scanner;
-import marketplace.client.MarketplaceClientImpl;
 import marketplace.shared.Marketplace;
-import marketplace.shared.MarketplaceClient;
 
 
 public class Server {

@@ -6,6 +6,8 @@ import bankrmi.shared.RejectedException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 import marketplace.shared.Item;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
@@ -17,10 +19,11 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
     private String customerName;
     private Account bankAccount;
     private MarketplaceClient client;   //to make callbacks
-    private Marketplace marketplace;
+    private MarketplaceImpl marketplace;
+    private List<Item> availableSales;
     
     public MarketplaceAccountImpl(String customerName, String bankAccountName, 
-            Marketplace marketplace) throws RemoteException, RegisterCustomerException {
+            MarketplaceImpl marketplace) throws RemoteException, RegisterCustomerException {
         this.customerName = customerName;
         //We do this so we can do callbacks to client
         try {
@@ -56,26 +59,38 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
         }
         System.out.println("He needs a dollar, dollar");
         //TEST
+        
+        availableSales = new ArrayList();
     }
 
     @Override
-    public void deposit(float value) throws RemoteException, RejectedException {
+    public synchronized void deposit(float value) throws RemoteException, RejectedException {
         bankAccount.deposit(value);
     }
 
     @Override
-    public void withdraw(float value) throws RemoteException, RejectedException {
+    public synchronized void withdraw(float value) throws RemoteException, RejectedException {
         bankAccount.withdraw(value);
     }
 
     @Override
-    public void addProduct(Item product) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void addProduct(String productName, float price) throws RemoteException {
+        Item product = (Item) new ItemImpl(productName, price, customerName);
+        if (marketplace.listItems().contains(product)) {
+            throw new RemoteException("Item already exists! Change price or name");
+        }
+        marketplace.addProduct(product);
     }
 
     @Override
-    public void buyProduct(Item product) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void buyProduct(Item product) throws RemoteException {
+        try {
+            withdraw(product.getPrice());
+            marketplace.buyProduct(product);
+        } catch (RejectedException ex) {
+            System.out.println("Bank rejected withdrawal for purchase");
+        }
+        
     }
 
     @Override
@@ -86,5 +101,18 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
     @Override
     public void notifyWishAvailable() throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void notifySale(String productName, float price) throws RemoteException {
+        client.notifySale(productName, price);
+    }
+    
+    public List<Item> getAvailableSales() {
+        return availableSales;
+    }
+
+    public void setAvailableSales(List<Item> availableSales) {
+        this.availableSales = availableSales;
     }
 }
