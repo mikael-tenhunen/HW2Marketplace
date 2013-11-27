@@ -9,7 +9,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import marketplace.shared.Item;
-import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
 import marketplace.shared.MarketplaceClient;
 import marketplace.shared.RegisterCustomerException;
@@ -98,14 +97,21 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
         marketplace.addWish(itemName, maxPrice, customerName);
     }
 
-    @Override
-    public void notifyWishAvailable() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    public void notifyWishAvailable(String itemName, float price) {
+        try {
+            client.notifyWishAvailable(itemName, price);
+        } catch (RemoteException ex) {
+            System.out.println("Problem notifying client of available wish");
+        }
     }
     
-    @Override
-    public void notifySale(String productName, float price) throws RemoteException {
-        client.notifySale(productName, price);
+    public void notifySale(String productName, float price) {
+        try {
+            client.notifySale(productName, price);
+        } catch (RemoteException ex) {
+            System.out.println("Problem notifying client of sale");
+        }
     }
     
     public List<Item> getAvailableSales() {

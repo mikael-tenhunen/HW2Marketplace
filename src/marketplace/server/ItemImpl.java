@@ -2,7 +2,6 @@ package marketplace.server;
 
 import java.io.Serializable;
 import marketplace.shared.Item;
-import marketplace.shared.MarketplaceAccount;
 
 
 public class ItemImpl implements Item, Serializable {

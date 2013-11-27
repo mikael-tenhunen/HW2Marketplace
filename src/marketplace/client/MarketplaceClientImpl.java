@@ -9,8 +9,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import marketplace.shared.Item;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
@@ -40,18 +38,6 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
                 System.exit(0);
         }        
     }    
-    
-//    public MarketplaceClientImpl(String name, String bankAccountName) throws RemoteException {
-//        this.name = name;
-//        
-//        try {
-//                marketplace = (Marketplace)Naming.lookup("marketplacemaininstance");
-//        } catch (Exception e) {
-//                System.out.println("The runtime failed: " + e.getMessage());
-//                System.exit(0);
-//        }
-//        System.out.println("Client connected to Marketplace");        
-//    }
     
     private class Command {
             private String arg1;
@@ -178,36 +164,9 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
 
         // all further commands require a first command argument
         String arg1 = command.getArg1();
-//        if (arg1 == null) {
-//            arg1 = name;
-//        }
-//
-//        if (userName == null) {
-//            System.out.println("name is not specified");
-//            return;
-//        }
-
-//        switch (command.getCommandName()) {
-//            case newAccount:
-//                clientname = userName;
-//                bankobj.newAccount(userName);
-//                return;
-//            case deleteAccount:
-//                clientname = userName;
-//                bankobj.deleteAccount(userName);
-//                return;
-//        }
 
         // all further commands require a second command argument
         String arg2 = command.getArg2();
-//        Account acc = bankobj.getAccount(userName);
-//        if (acc == null) {
-//            System.out.println("No account for" + userName);
-//            return;
-//        } else {
-//            account = acc;
-//            clientname = userName;
-//        }
         
         switch (command.getCommandName()) {
             case register:
@@ -337,38 +296,9 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
 
     @Override
     public void notifyWishAvailable(String itemName, float price) throws RemoteException {
-    }
-    
-//    public void command() {
-//        System.out.println();
-//        
-//        
-//        
-//        
-//        
-//        
-//        System.out.println("Hello Marketplace customer! Enter your name to "
-//                + "register: ");
-//        String customerName = in.nextLine();    
-//        
-//        System.out.println("Enter your Nordea account name ");
-//        String bankAccountName = in.nextLine();          
-//        
-//        try {
-//            
-//            // Register the newly created object at rmiregistry.
-//            java.rmi.Naming.rebind(customerName, client);
-//            System.out.println(client + " is ready.");
-//            
-//            //TEST
-//            client.registerAtMarketplace(customerName, bankAccountName);
-//            //TEST                
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        
-//    }
-    
+        System.out.println("The product " + itemName + ", is available for "
+                + "$" + price + ".");
+    }   
     
     public static void main(String[] args) {
         try {

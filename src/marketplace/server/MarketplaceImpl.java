@@ -15,13 +15,13 @@ import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace {
     Map<String, MarketplaceAccount> accounts;
-    Map<String, Wish> wishes;
+    List<Wish> wishes;
     List<Item> items;
     
     
     public MarketplaceImpl() throws RemoteException { 
         accounts = new HashMap();
-        wishes = new HashMap();
+        wishes = new ArrayList();
         items = new ArrayList();
     }
 
@@ -64,7 +64,12 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
         MarketplaceAccountImpl account = (MarketplaceAccountImpl) accounts.get(product.getSellerName());
         account.getAvailableSales().add(product);
         Collections.sort(items);
-        
+        for (Wish wish : wishes) {
+            if (wish.getItemName().equals(product.getName())
+                    && wish.getPrice() == product.getPrice()) {
+                notifyWish(wish);
+            }
+        }
     }
     
     public synchronized void buyProduct(Item product) {
@@ -81,13 +86,24 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
         }
     }
     
-    public synchronized void addWish(String itemName, float maxPrice, String wisherName) {
-        Wish wish = new Wish(itemName, maxPrice, wisherName);
-        wishes.put(itemName, wish);
-        //Check if wished item already exists
+    public synchronized void addWish(String itemName, float price, String wisherName) {
+        Wish wish = new Wish(itemName, price, wisherName);
+        wishes.add(wish);
+        //Check if wished item already exists, in that case notify
+        if (items.contains(new ItemImpl(itemName,price,null))) {
+            notifyWish(wish);
+        }
     }
     
-//    public synchronized void notifyWish() {
-//        
-//    }
+    
+    
+    public synchronized void notifyWish(Wish wish) {
+        String wisherName = wish.getWisherName();
+        MarketplaceAccountImpl wisherAccount = (MarketplaceAccountImpl) accounts.get(wisherName);
+        wisherAccount.notifyWishAvailable(wish.getItemName(), wish.getPrice());
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
+    }
 }
