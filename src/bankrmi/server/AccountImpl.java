@@ -19,7 +19,6 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
         this.name = name;
     }
     
-    @Override
     public synchronized void deposit(float value) throws RemoteException, 
                                                          RejectedException {
         if (value < 0) {
@@ -31,7 +30,6 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
                             value + ", balance: $" + balance);
     }
     
-    @Override
     public synchronized void withdraw(float value) throws RemoteException, 
             RejectedException {
         if (value < 0) {
@@ -48,7 +46,6 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
                             value + ", balance: $" + balance);
     }
     
-    @Override
     public synchronized float getBalance() throws RemoteException {
         return balance;
     }
