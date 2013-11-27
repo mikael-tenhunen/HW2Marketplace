@@ -61,16 +61,19 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
     
     public synchronized void addProduct(Item product) {
         items.add(product);
+        MarketplaceAccountImpl account = (MarketplaceAccountImpl) accounts.get(product.getSellerName());
+        account.getAvailableSales().add(product);
         Collections.sort(items);
         
     }
     
     public synchronized void buyProduct(Item product) {
         try {
-            MarketplaceAccount seller = accounts.get(product.getSellerName());
+            MarketplaceAccountImpl seller = (MarketplaceAccountImpl) accounts.get(product.getSellerName());
             seller.deposit(product.getPrice());
             seller.notifySale(product.getName(), product.getPrice());
             items.remove(product);
+            seller.getAvailableSales().remove(product);
         } catch (RemoteException ex) {
             System.out.println("Problem contacting bank when depositing");
         } catch (RejectedException ex) {
