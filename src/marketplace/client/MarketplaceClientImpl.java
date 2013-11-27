@@ -29,13 +29,13 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
         System.out.println("Client connected to Marketplace");        
     }
 
-    protected void offerProduct(String  temName, float price) {
+    protected void offerProduct(String  itemName, float price) {
     }
 
     protected void buyProduct(String itemName) {
     }
 
-    protected void registerAtMarketplace(String name, String bankAccountName) throws RegisterCustomerException {
+    protected void registerAtMarketplace(String name, String bankAccountName){
         try {
             this.marketplaceAccount = (MarketplaceAccount)
                     marketplace.registerCustomer(name, bankAccountName);
@@ -43,9 +43,9 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             System.out.println("Remote call to method registerCustomer at"
                     + "MarketPlace failed.");
             ex.printStackTrace();
-        } catch(RegisterCustomerException RCException)
+        } catch(RegisterCustomerException rcException)
         {
-            System.out.println(RCException);
+            System.out.println(rcException);
         }
        
     }

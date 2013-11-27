@@ -54,7 +54,7 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
         } catch (RejectedException ex) {
             System.out.println("Deposit rejected");
         }
-        System.out.println("I heard you need a dollar");
+        System.out.println("He needs a dollar, dollar");
         //TEST
     }
 
