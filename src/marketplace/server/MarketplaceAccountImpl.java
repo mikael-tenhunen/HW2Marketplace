@@ -95,7 +95,7 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
 
     @Override
     public void addWish(String itemName, float maxPrice) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        marketplace.addWish(itemName, maxPrice, customerName);
     }
 
     @Override

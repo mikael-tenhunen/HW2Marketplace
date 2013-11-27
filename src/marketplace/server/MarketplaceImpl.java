@@ -15,13 +15,13 @@ import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace {
     Map<String, MarketplaceAccount> accounts;
-    List<Wish> wishes;
+    Map<String, Wish> wishes;
     List<Item> items;
     
     
     public MarketplaceImpl() throws RemoteException { 
         accounts = new HashMap();
-        wishes = new ArrayList();
+        wishes = new HashMap();
         items = new ArrayList();
     }
 
@@ -62,6 +62,7 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
     public synchronized void addProduct(Item product) {
         items.add(product);
         Collections.sort(items);
+        
     }
     
     public synchronized void buyProduct(Item product) {
@@ -76,4 +77,14 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
             System.out.println("Problem depositing to bank account of seller");
         }
     }
+    
+    public synchronized void addWish(String itemName, float maxPrice, String wisherName) {
+        Wish wish = new Wish(itemName, maxPrice, wisherName);
+        wishes.put(itemName, wish);
+        //Check if wished item already exists
+    }
+    
+//    public synchronized void notifyWish() {
+//        
+//    }
 }

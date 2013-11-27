@@ -295,7 +295,11 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
     }
     
     protected void makeWish(String itemName, float maxPrixe) {
-        
+        try {
+            marketplaceAccount.addWish(itemName, maxPrixe);
+        } catch (RemoteException ex) {
+            System.out.println("Problem sending wish to Marketplace");
+        }
     }
 
     protected void registerAtMarketplace(String name, String bankAccountName) {
