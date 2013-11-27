@@ -1,6 +1,5 @@
 package marketplace.server;
 
-import bankrmi.shared.Account;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -36,18 +35,5 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
     @Override
     public List<Item> listItems() throws RemoteException {
         return null;
-    }
-
-    @Override
-    public MarketplaceAccount registerCustomer(String customerName, Account bankAccount) throws RemoteException {
-    }
-
-    @Override
-    public boolean unregisterCustomer(String customerName) throws RemoteException {
-        return false;
-    }
-
-    @Override
-    public listItems() throws RemoteException {
     }
 }
