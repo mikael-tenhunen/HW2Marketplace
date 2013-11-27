@@ -318,11 +318,16 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
     }
 
     protected void unregisterAtMarketplace() {
+        try {
+            marketplace.unregisterCustomer(name);
+        } catch (RemoteException ex) {
+            System.out.println("Something went wrong with unregister.");
+        }
     }
 
     @Override
     public void notifySale(String productName, float price) throws RemoteException {
-        System.out.println("A buyer has been found for your " + productName + ". " 
+        System.out.println("A buyer has been found for your " + productName + ". $" 
                             + price +" has been deposited to your account.");
     }
 
