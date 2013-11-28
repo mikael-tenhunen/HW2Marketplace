@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.StringTokenizer;
 
 public class Client {    
 	private static final String USAGE = "java bankrmi.Client <bank_url>";
 	private static final String DEFAULT_BANK_NAME = "Nordea";
+        private static final String HOST = "localhost";
 	Account account;
 	Bank bankobj;
 	private String bankname;
@@ -25,7 +27,8 @@ public class Client {
 	public Client(String bankName) {
 		this.bankname = bankName;
 		try {
-			bankobj = (Bank)Naming.lookup(bankname);
+                        LocateRegistry.getRegistry(1099).list();
+                        bankobj = (Bank)Naming.lookup("rmi://" + HOST + "/" + bankname);
 		} catch (Exception e) {
 			System.out.println("The runtime failed: " + e.getMessage());
 			System.exit(0);

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -16,12 +17,12 @@ import marketplace.shared.MarketplaceClient;
 import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceClientImpl extends UnicastRemoteObject implements MarketplaceClient{
-    
     private Marketplace marketplace;
     private String bankAccountName;
     private String name;
     public MarketplaceAccount marketplaceAccount;
     private static String MARKETPLACENAME = "Marketplace";
+    private static String HOST = "localhost";
     
     static enum CommandName {
 		buy, offer, list, register, unregister, wish, quit, help;
@@ -29,7 +30,8 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
     
     public MarketplaceClientImpl() throws RemoteException {
         try {
-                marketplace = (Marketplace)Naming.lookup("marketplacemaininstance");
+                LocateRegistry.getRegistry(1099).list();
+                marketplace = (Marketplace)Naming.lookup("rmi://" + HOST + "/" + MARKETPLACENAME);
 //                System.out.println("Client connected to Marketplace");  
 //                java.rmi.Naming.rebind(customerName, client);
         } catch (Exception e) {
