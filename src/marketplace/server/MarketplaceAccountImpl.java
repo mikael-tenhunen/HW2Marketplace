@@ -15,6 +15,7 @@ import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceAccountImpl extends UnicastRemoteObject implements MarketplaceAccount{
     static final String DEFAULT_BANK = "Nordea";
+    static String HOST = "localhost";
     private String customerName;
     private Account bankAccount;
     private MarketplaceClient client;   //to make callbacks
@@ -27,7 +28,8 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
         this.client = client;
         //Make RMI to bank account possible
         try {
-            Bank bank = (Bank) Naming.lookup(DEFAULT_BANK);
+//            Bank bank = (Bank) Naming.lookup(DEFAULT_BANK);
+            Bank bank = (Bank) Naming.lookup("rmi://" + HOST + "/" + DEFAULT_BANK);
             bankAccount = bank.getAccount(bankAccountName);
             System.out.println("Bank: " + bank);
             System.out.println("Bank Account: " + bankAccount);

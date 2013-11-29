@@ -270,7 +270,9 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             this.name = name;
             this.bankAccountName = bankAccountName;
             System.out.println("Client connected to Marketplace");  
-            java.rmi.Naming.rebind(name, this);
+            //Don't need to register name of this client object because we pass
+            //it by reference
+//            java.rmi.Naming.rebind(name, this);
             this.marketplaceAccount = (MarketplaceAccount)
                     marketplace.registerCustomer(this, bankAccountName);
         } catch (RemoteException ex) {
@@ -279,9 +281,7 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             ex.printStackTrace();
         } catch (RegisterCustomerException rcException) {
             System.out.println(rcException);
-        } catch (MalformedURLException urlException) {
-            System.out.println(urlException);
-        }
+        } 
     }
 
     protected void unregisterAtMarketplace() {
