@@ -21,19 +21,10 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
     private MarketplaceImpl marketplace;
     private List<Item> availableSales;
     
-    public MarketplaceAccountImpl(String customerName, String bankAccountName, 
+    public MarketplaceAccountImpl(MarketplaceClient client, String customerName, String bankAccountName, 
             MarketplaceImpl marketplace) throws RemoteException, RegisterCustomerException {
         this.customerName = customerName;
-        //We do this so we can do callbacks to client
-        try {
-                client = (MarketplaceClient) Naming.lookup(customerName);
-        } catch (Exception e) {
-                System.out.println("Failed creating a serverside representation"
-                        + " of MarketplaceClient in constructor of account: " 
-                        + e.getMessage());
-                throw new RegisterCustomerException("Failed creating a serverside representation"
-                        + " of MarketplaceClient in constructor of account: " + e.getMessage()); 
-        }    
+        this.client = client;
         //Make RMI to bank account possible
         try {
             Bank bank = (Bank) Naming.lookup(DEFAULT_BANK);
@@ -51,14 +42,11 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
         this.marketplace = marketplace;
         System.out.println("MarketplaceAccount succesfully created");
         try {
-            //TEST
             deposit(1);
         } catch (RejectedException ex) {
             System.out.println("Deposit rejected");
         }
-        System.out.println("He needs a dollar, dollar");
-        //TEST
-        
+        System.out.println("Welcome to Marketplace, here's a complimentary dollar");
         availableSales = new ArrayList();
     }
 
@@ -79,6 +67,7 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
             throw new RemoteException("Item already exists! Change price or name");
         }
         marketplace.addProduct(product);
+        System.out.println(productName + " added.");
     }
 
     @Override
@@ -86,6 +75,21 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
         try {
             withdraw(product.getPrice());
             marketplace.buyProduct(product);
+            String productName = product.getName();
+            float productPrice = product.getPrice();
+            //see if a wish has to be removed
+            List<Wish> wishes = marketplace.getWishes();
+            for (Wish wish : wishes) {
+                if (wish.getItemName().equals(productName)
+                        && wish.getPrice() == productPrice
+                        && wish.getWisherName().equals(customerName)) {
+                    wishes.remove(wish);
+                    System.out.println("Wish for " + productName +
+                            " removed for " + customerName + ".");
+                }
+            }
+            System.out.println("Product " + productName + " sold to " 
+                    + customerName);
         } catch (RejectedException ex) {
             System.out.println("Bank rejected withdrawal for purchase");
         }
@@ -109,6 +113,8 @@ public class MarketplaceAccountImpl extends UnicastRemoteObject implements Marke
     public void notifySale(String productName, float price) {
         try {
             client.notifySale(productName, price);
+            System.out.println(customerName + " notified of sale of " 
+                    + productName);
         } catch (RemoteException ex) {
             System.out.println("Problem notifying client of sale");
         }

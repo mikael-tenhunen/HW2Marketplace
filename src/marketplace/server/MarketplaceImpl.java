@@ -11,6 +11,7 @@ import java.util.Map;
 import marketplace.shared.Marketplace;
 import marketplace.shared.MarketplaceAccount;
 import marketplace.shared.Item;
+import marketplace.shared.MarketplaceClient;
 import marketplace.shared.RegisterCustomerException;
 
 public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace {
@@ -26,18 +27,21 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
     }
 
     @Override
-    public MarketplaceAccount registerCustomer(String customerName, 
+    public MarketplaceAccount registerCustomer(MarketplaceClient client, 
             String bankAccountName) throws RemoteException, RegisterCustomerException {
         try
         {
+        String customerName = client.getName();
         MarketplaceAccount account = (MarketplaceAccount) 
-                new MarketplaceAccountImpl(customerName, bankAccountName, 
+                new MarketplaceAccountImpl(client, customerName, bankAccountName, 
             this);
         accounts.put(customerName, account);
+        System.out.println("New account registered: " + customerName);
         return account;
         }
         catch(Exception e)
         {
+            System.out.println(e);
             throw new RegisterCustomerException("Something went wrong with your"
                     +" registration. please try again");
         }
@@ -51,6 +55,7 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
            items.remove(item);
        }
        accounts.remove(customerName);
+       System.out.println("Account removed: " + customerName);
        return true;
     }
 
@@ -70,6 +75,7 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
                 notifyWish(wish);
             }
         }
+        System.out.println("Product added: " + product.getName());
     }
     
     public synchronized void buyProduct(Item product) {
@@ -94,9 +100,7 @@ public class MarketplaceImpl extends UnicastRemoteObject implements Marketplace 
             notifyWish(wish);
         }
     }
-    
-    
-    
+   
     public synchronized void notifyWish(Wish wish) {
         String wisherName = wish.getWisherName();
         MarketplaceAccountImpl wisherAccount = (MarketplaceAccountImpl) accounts.get(wisherName);

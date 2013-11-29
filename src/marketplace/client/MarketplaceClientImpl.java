@@ -189,8 +189,6 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
                     String productName = arg1;
                     float price = Float.valueOf(arg2);
                     buyProduct(productName, price);
-                    System.out.println("Purchase successful. $" + price 
-                                        + " has been withdrawn from your account.");
                 } catch (Exception ne) {
                     System.out.println("Problem with second argument: should be"
                             + "floating point number");
@@ -219,7 +217,7 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
         this.bankAccountName = bankAccountName;
     }
 
-    public String getName() {
+    public String getName() throws RemoteException {
         return name;
     }
 
@@ -247,6 +245,8 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             }
             if (product != null) {
                 marketplaceAccount.buyProduct(product);
+                System.out.println("Purchase successful. $" + price 
+                                        + " has been withdrawn from your account.");
             }
             else {
                 System.out.println("No such item available");
@@ -272,7 +272,7 @@ public class MarketplaceClientImpl extends UnicastRemoteObject implements Market
             System.out.println("Client connected to Marketplace");  
             java.rmi.Naming.rebind(name, this);
             this.marketplaceAccount = (MarketplaceAccount)
-                    marketplace.registerCustomer(name, bankAccountName);
+                    marketplace.registerCustomer(this, bankAccountName);
         } catch (RemoteException ex) {
             System.out.println("Remote call to method registerCustomer at"
                     + "MarketPlace failed.");
